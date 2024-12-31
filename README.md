@@ -1,2 +1,2 @@
-# SPECTaiCLE--- Flask Web App
+# SPECTaiCLE --- Flask Web App
 Virtualize your Library
