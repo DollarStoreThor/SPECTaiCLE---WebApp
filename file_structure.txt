@@ -8,6 +8,8 @@ SPECTaiCLE/
 │   ├── __init__.py
 │   └── routes.py
 ├── model/
-│   └── preprocess.py
+│   └── preprocess.py # Image Manipulation, Object Detection, and OCR
+│   └── tesseract_ocr
+│   │   └── tesseract.exe
 ├── run.py
 └── requirements.txt
