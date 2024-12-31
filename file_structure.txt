@@ -1,0 +1,13 @@
+SPECTaiCLE/
+├── app/
+│   ├── static/       # CSS, JS, images
+│   │   ├── styles.css
+│   │   └── scripts.js
+│   ├── templates/    # HTML files
+│   │   └── index.html
+│   ├── __init__.py
+│   └── routes.py
+├── model/
+│   └── preprocess.py
+├── run.py
+└── requirements.txt
