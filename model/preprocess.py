@@ -42,14 +42,10 @@ import threading
 
 import os
 
-# Absolute path to the model
-model_path = r"C:\Users\arado\Desktop\SPECTaiCLE\model\model_v9i.pt"
-if not os.path.exists(model_path):
-    raise FileNotFoundError(f"Model file not found at {model_path}")
 
-model = YOLO(model_path)
 
 def flip_black_white_fast(image):
+    print("flip_black_white_fast")
     flip_black_white_faststart_time = time.time()
     image_array = np.array(image)
     
@@ -77,6 +73,7 @@ def flip_black_white_fast(image):
 
 
 def rescaleImage(image_path = '', min_size=2000, max_size = 3000, upscale_factor=2, downscale_factor=0.75):
+    print("rescaleImage")
     # Load the image
     original_image = Image.open(image_path)
 
@@ -128,6 +125,7 @@ def rescaleImage(image_path = '', min_size=2000, max_size = 3000, upscale_factor
 
 
 def correctImage(images, save_dir=None):
+    print("correctImage")
     correctImagestart_time = time.time()
     '''
     Corrects the input images and saves rotated copies.
@@ -189,6 +187,7 @@ def correctImage(images, save_dir=None):
 
 
 def process_folder(folder_path):
+    print("process_folder")
     process_folderstart_time = time.time()
     # Check if the folder exists
     if not os.path.exists(folder_path):
@@ -215,6 +214,8 @@ def process_folder(folder_path):
 pytesseract.pytesseract.tesseract_cmd = r"c:\Users\arado\Desktop\SPECTaiCLE\model\tesseract ocr\tesseract.exe"
 
 def detect_text(image_path, oem=1, psm=3):
+    print("detect_text")
+
     detect_textstart_time = time.time()
     """
     Detects text in the image file using Tesseract's LSTM engine.
@@ -255,6 +256,7 @@ def detect_text(image_path, oem=1, psm=3):
     return detected_text
 
 def rename_results_with_boundingBox(results, source, text_prediction_mode = False):
+    print("rename_results_with_boundingBox")
 
     # Regex to extract the file name
     pattern = r"[^\\]+$"
@@ -262,7 +264,7 @@ def rename_results_with_boundingBox(results, source, text_prediction_mode = Fals
     file_name = None
     if match_filename:
         file_name = match_filename.group(0)
-        print(file_name)  # Output: home-library-tour-v0-wk0mm30medka.jpg
+        print(file_name)  
 
     # Regex to extract the file type
     pattern = r"\.\w+$"
@@ -304,15 +306,19 @@ def rename_results_with_boundingBox(results, source, text_prediction_mode = Fals
             print(f"File not found: {original_file}")
 
 
-def get_spines(source, save=False):
+def get_spines(source, save=False, model=None):
+    print("get_spines")
     get_spinesstart_time = time.time()
-    results = model.predict(source = source, #Location of item to predict {'filepath: such as .mp4 videos, or .jpg photos', '0 for webcam', 'local hosting ip adresses'}
+    results = model.predict(project=r"C:\Users\arado\uploads",
+                    source = source, #Location of item to predict {'filepath: such as .mp4 videos, or .jpg photos', '0 for webcam', 'local hosting ip adresses'}
                     save=save, #Save to the local prediction folder ( runs/detect/predict  )
                     conf = 0.1, #Threshold for confidence, best value obtained from f1 curve is 0.456, higher conf better for webcams/video ~0.80+
                     line_width = 2, #Text and Line Thickness
                     save_crop=save, #If set to TRUE It will automaticlly crop out the bounding box of predictions and save them to ( runs/detect/predict/crops )
-                    save_txt=save, #Saves annotations in YOLO format to ( runs/detect/predict/labels )
+                    save_txt=save, #Saves annotations in YOLO format to ( runs/detect/predict/labels )   
+                    show=True, #Shows the image with predictions
                 )
+    print('Results: ', results)
     
     rename_results_with_boundingBox(results=results, source=source)
 
@@ -320,6 +326,7 @@ def get_spines(source, save=False):
     print(f"get_spines took {get_spinesend_time - get_spinesstart_time:.2f} seconds")   
 
 def read_photos(clear_input_folder = True, correctImages=False, folder_path = r"C:\Users\arado\uploads"):
+    print("read_photos")
     read_photosstart_time = time.time()
     # Specify your folder path here
     files = process_folder(folder_path)
@@ -356,10 +363,19 @@ image_file_paths = [
 
 all_predicted_book_spines = []
 def get_books(correctImages=True, cullNullTextImages = False, image_file_paths = []):
+    print("get_books")
+
+    # Absolute path to the model
+    model_path = r"C:\Users\arado\Desktop\SPECTaiCLE\model\model_v9i.pt"
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file not found at {model_path}")
+
+
     # YOLO Model Inference   
     for item in image_file_paths:
         # Perform inference
-        get_spines(item, save=True)     
+        print(f"Performing inference on {item}")
+        get_spines(source=item, save=False, model=YOLO(model_path))    
 
     # Process each image independently
     books = read_photos(clear_input_folder=False, correctImages=correctImages)
