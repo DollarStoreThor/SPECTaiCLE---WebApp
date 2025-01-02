@@ -7,19 +7,40 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>SPECTaiCLE</h1>
-        <p>Upload a bookshelf image to get book predictions and recommendations!</p>
+    <div class="containers-wrapper">
+        <div class="container">
+            <h1>SPECTaiCLE</h1>
+            <p>Upload a bookshelf image to get book location predictions!</p>
+    
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="imageInput" name="image" accept="image/*" required>
+                <button type="button" onclick="submitImage()">Submit</button>
+            </form>
+    
+            <div id="loader" style="display: none;">Processing...</div>
+            <div id="result"></div>
+        </div>
 
-        <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" id="imageInput" name="image" accept="image/*" required>
-            <button type="button" onclick="submitImage()">Submit</button>
-        </form>
+        <div>
+            </br>
+        </div>
 
-        <div id="loader" style="display: none;">Processing...</div>
-        <div id="result"></div>
+        <div class="container">
+            <h1>Book Recommendations</h1>
+            <p>Choose a book from the dropdown to get recommendations!</p>
+
+            <form method="POST" onsubmit="handleSubmit(event)">
+                <label for="csvDropdown">Choose an option:</label>
+                <select id="csvDropdown" name="csvDropdown">
+                    {% for option in dropdown_options %}
+                        <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" onclick="submitBookRecommendations()">Submit</button>
+            </form>
+        </div>
+
     </div>
-
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
