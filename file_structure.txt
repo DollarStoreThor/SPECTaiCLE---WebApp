@@ -9,6 +9,29 @@ SPECTaiCLE/
 │   └── routes.py
 ├── model/
 │   └── preprocess.py # Image Manipulation, Object Detection, and OCR
+│   └── recommendations.py # Text to Text recommendations
+│   └── recommendation_csv_files # Folder to hold all CSVs pertaining to item/item and user/user book recommendations
+│   │   └──Item-Item_c0.csv
+│   │   └──Item-Item_c1.csv
+│   │   └──Item-Item_c2.csv
+│   │   └──Item-Item_c3.csv
+│   │   └──Item-Item_c4.csv
+│   │   └──Item-Item_c5.csv
+│   │   └──Item-Item_c6.csv
+│   │   └──Item-Item_c7.csv
+│   │   └──Item-Item_c8.csv
+│   │   └──Item-Item_c9.csv
+│   │   └──Item-Item_c10.csv
+│   │   └──Item-Item_c11.csv
+│   │   └──Item-Item_c12.csv
+│   │   └──Item-Item_c13.csv
+│   │   └──Item-Item_c14.csv
+│   │   └──Item-Item_c15.csv
+│   │   └──Item-Item_c16.csv
+│   │   └──Item-Item_c17.csv
+│   │   └──Item-Item_c18.csv
+│   │   └──Item-Item_c19.csv
+│   │   └──b.csv
 │   └── tesseract_ocr
 │   │   └── tesseract.exe
 ├── run.py
