@@ -10,6 +10,6 @@ def create_app():
     from .routes import routes
     app.register_blueprint(routes)
 
-    app.config["UPLOAD_FOLDER"] = os.path.join(os.getcwd(), "uploads")
+    app.config["UPLOAD_FOLDER"] = os.path.join(os.getcwd(), r"C:\Users\arado\Desktop\SPECTaiCLE\uploads")
 
     return app

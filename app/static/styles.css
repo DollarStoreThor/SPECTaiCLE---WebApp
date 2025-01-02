@@ -6,26 +6,28 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f4f4f9;
+    background-color: #e7e7ee;
 }
 
 .container {
     text-align: center;
-    background: #fff;
+    background: #dadae4;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     max-width: 400px;
     width: 100%;
+    border: 2px solid #0f0fd4;
+    border-: 2px solid #0f0fd4;
 }
 
 h1 {
-    color: #333;
+    color: #000000;
     margin-bottom: 10px;
 }
 
 p {
-    color: #666;
+    color: #151515;
     font-size: 14px;
     margin-bottom: 20px;
 }
@@ -35,25 +37,28 @@ input[type="file"] {
 }
 
 button {
-    background-color: #007BFF;
+    background-color: #0f0fd4;
     color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #0f0f81;
+    border: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #result {
     margin-top: 20px;
-    color: #333;
+    color: #0f0fd4;
 }
 
 #loader {
     font-size: 14px;
-    color: #007BFF;
+    color: #0f0fd4af;
 }

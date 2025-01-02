@@ -1,4 +1,12 @@
 async function submitImage() {
+    /* The data is coming from the Flask backend through the `/get_books` endpoint. When the frontend makes a POST request to `/get_books`, the server processes the uploaded image and returns a JSON response containing the predictions array
+    The data flow is:
+    1. Image is uploaded via the form
+    2. Frontend sends image to `/get_books` endpoint
+    3. Backend processes image and returns JSON with predictions array
+    4. Frontend code accesses data.predictions from the response
+    */
+
     const fileInput = document.getElementById("imageInput");
     const resultDiv = document.getElementById("result");
     const loader = document.getElementById("loader");
@@ -7,7 +15,6 @@ async function submitImage() {
         resultDiv.textContent = "Please upload an image first.";
         return;
     }
-
 
     loader.style.display = "block";
     resultDiv.textContent = "";
@@ -26,20 +33,14 @@ async function submitImage() {
         const data = await response.json();
 
         if (response.ok) {
-            if (data.predictions && data.predictions.length > 0) {
-                // Display predictions in a formatted list
-                const predictionsList = data.predictions
-                    .map((book) => `<li>${book}</li>`)
-                    .join("");
-                resultDiv.innerHTML = `
-                    <h3>Detected Books:</h3>
-                    <ul>${predictionsList}</ul>
-                `;
+            if (data.text) {
+                // Display the extracted text
+                resultDiv.textContent = data.text;
             } else {
-                resultDiv.innerHTML = "<h3>No books detected.</h3>";
+                resultDiv.textContent = "No text was extracted from the image.";
             }
         } else {
-            resultDiv.textContent = `Error: ${data.error}`;
+            resultDiv.textContent = `Error: ${data.message}`;
         }
     } catch (error) {
         resultDiv.textContent = `Error: ${error.message}`;

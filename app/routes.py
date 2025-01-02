@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint, render_template, current_app
 import os
 from model.preprocess import get_books
-from model.recommendations import get_recommendations #need to create this python script
+from model.recommendations import get_recommendations 
 from flask import render_template, Blueprint
 import pandas as pd
 
@@ -22,7 +22,7 @@ def home():
 
 
 # Route to get books from an image
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+UPLOAD_FOLDER = os.path.join(os.getcwd(), r"C:\Users\arado\Desktop\SPECTaiCLE\uploads")
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
@@ -46,8 +46,12 @@ def get_books_route():
     print("File saved successfully.")
 
     try:
-        predicted_books = get_books(correctImages=True, cullNullTextImages=False, image_file_paths=[image_path])
-        return jsonify({'predicted_books': predicted_books})
+        predicted_books = get_books(correctImages=True, cullNullTextImages=False, image_file_path = image_path)
+        
+        # Extract just the text content from the tuples
+        processed_books = [book[1] for book in predicted_books if book[1].strip()]
+        
+        return jsonify({'predicted_books': processed_books})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

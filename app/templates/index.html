@@ -52,7 +52,11 @@
                         searchResults.innerHTML = resultHTML;
                         });
                     </script>
-                    <button type="button" onclick="submitBookForRecommendation()">Submit</button>
+                    <br>
+                    
+                    <button type="button" onclick="submitBookForRecommendation()">Get Recommendations</button>
+                    <div id="loader" style="display: none;">Processing...</div>
+                    <div id="result"></div>
 
                     </div>
                 </form>
