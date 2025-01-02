@@ -16,6 +16,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from sklearn.decomposition import TruncatedSVD
+import random 
+import string
 
 
 #Images
@@ -283,7 +285,7 @@ def rename_results_with_boundingBox(results, source, text_prediction_mode = Fals
     for i, box in enumerate(results[0].boxes.xyxy):  # Access bounding boxes
         x_min, y_min, x_max, y_max = map(int, box)  # Convert to integers
     
-        cropped_images_dir = r"C:\Users\arado\uploads"
+        cropped_images_dir = r"C:\Users\arado\Desktop\SPECTaiCLE\runs"
 
         # Construct the new file name
         if i == 0:
@@ -306,10 +308,10 @@ def rename_results_with_boundingBox(results, source, text_prediction_mode = Fals
             print(f"File not found: {original_file}")
 
 
-def get_spines(source, save=False, model=None):
+def get_spines(source, save=False, model=None, Projectcode=''):
     print("get_spines")
     get_spinesstart_time = time.time()
-    results = model.predict(project=r"C:\Users\arado\uploads",
+    results = model.predict(project=r"C:\Users\arado\Desktop\SPECTaiCLE\runs\\" + f'{Projectcode}', #Project name
                     source = source, #Location of item to predict {'filepath: such as .mp4 videos, or .jpg photos', '0 for webcam', 'local hosting ip adresses'}
                     save=save, #Save to the local prediction folder ( runs/detect/predict  )
                     conf = 0.1, #Threshold for confidence, best value obtained from f1 curve is 0.456, higher conf better for webcams/video ~0.80+
@@ -325,7 +327,7 @@ def get_spines(source, save=False, model=None):
     get_spinesend_time = time.time()
     print(f"get_spines took {get_spinesend_time - get_spinesstart_time:.2f} seconds")   
 
-def read_photos(clear_input_folder = True, correctImages=False, folder_path = r"C:\Users\arado\uploads"):
+def read_photos(clear_input_folder = True, correctImages=False, folder_path = r""):
     print("read_photos")
     read_photosstart_time = time.time()
     # Specify your folder path here
@@ -355,14 +357,15 @@ def read_photos(clear_input_folder = True, correctImages=False, folder_path = r"
     return results_tesseract
 
 
+def generateProjectCode():
+    length = 32
+    characters = string.ascii_letters + string.digits
+    generated_string = ''.join(random.choices(characters, k=length))
+    return generated_string
 
-#Image File Paths
-image_file_paths = [
-        r"C:\Users\arado\uploads"
-    ]
 
 all_predicted_book_spines = []
-def get_books(correctImages=True, cullNullTextImages = False, image_file_paths = []):
+def get_books(correctImages=True, cullNullTextImages = False, image_file_path = r"", ):
     print("get_books")
 
     # Absolute path to the model
@@ -370,21 +373,23 @@ def get_books(correctImages=True, cullNullTextImages = False, image_file_paths =
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model file not found at {model_path}")
 
+    Projectcode = generateProjectCode()
 
-    # YOLO Model Inference   
-    for item in image_file_paths:
-        # Perform inference
-        print(f"Performing inference on {item}")
-        get_spines(source=item, save=False, model=YOLO(model_path))    
+    # Perform inference on the image
+    print(f"Performing inference on {image_file_path}")
+    get_spines(source=image_file_path, save=True, model=YOLO(model_path), Projectcode=Projectcode)   
 
     # Process each image independently
-    books = read_photos(clear_input_folder=False, correctImages=correctImages)
+
+    
+    books = read_photos(clear_input_folder=False, correctImages=correctImages, folder_path = r"C:\Users\arado\Desktop\SPECTaiCLE\runs\\" + f'{Projectcode}' + r"\predict\crops\Book")
 
     if books:  # Make sure books is not empty
         if cullNullTextImages:
             #Keep only books where book[1] is not an empty string
             books = [book for book in books if book[1] != '']
-           
+
+        print(books)
         return books
     else:
         print('No Books Detected')
