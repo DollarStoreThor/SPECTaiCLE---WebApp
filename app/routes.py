@@ -11,40 +11,20 @@ routes = Blueprint("routes", __name__)
 # Route to serve the frontend
 @routes.route('/')
 def home():
-    return render_template('index.html')
+
+    # Read CSV file
+    df = pd.read_csv(r"C:\Users\arado\Desktop\SPECTaiCLE\model\recommendation_csv_files\b.csv")
+    # Extract unique values for dropdown
+    dropdown_options = df['AuthorTitleString'].unique().tolist()
+    dropdown_options = sorted(dropdown_options, key=str.lower)
+    
+    return render_template('index.html', dropdown_options=dropdown_options)
 
 
 # Route to get books from an image
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-
-'''
-@routes.route('/get_books', methods=['POST'])
-def get_books_route():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image uploaded'}), 400
-
-    image = request.files['image']
-    if image.filename == '':
-            return jsonify({'error': 'No selected file'}), 400
-    
-    # Save the uploaded image
-    image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], image.filename)
-    print(f"Resolved file path: {image_path}")
-    image.save(image_path)
-    print("File saved successfully.")
-
-    output_folder = os.path.join('SPECTaiCLE', 'runs', 'detect', 'predict', 'crops', 'Book')
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-
-    try:
-        predicted_books = get_books(image_file_paths=image_path)
-        return jsonify({'predicted_books': predicted_books})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-'''   
 
 
 @routes.route('/get_books', methods=['POST'])
@@ -72,20 +52,20 @@ def get_books_route():
         return jsonify({'error': str(e)}), 500
 
 
-
-
 @routes.route('/get_dropdown_data', methods=['GET'])
 def get_dropdown_data():
     try:
-        # Load your CSV file
-        file_path = r"C:\Users\arado\Desktop\SPECTaiCLE\model\recommendation_csv_files\b.csv"  # Replace with your actual CSV file path
-        df = pd.read_csv(file_path)
-
-        # Extract unique elements from the specific column
-        unique_elements = df['AuthorTitleString'].dropna().unique()  # Replace 'ColumnName' with your column name
-
-        # Convert to a list and return as JSON
-        return jsonify({'unique_elements': unique_elements.tolist()}), 200
+        # Read CSV file
+        df = pd.read_csv(r"C:\Users\arado\Desktop\SPECTaiCLE\model\recommendation_csv_files\b.csv")
+        
+        # Extract unique values for dropdown
+        dropdown_options = df['AuthorTitleString'].unique().tolist()
+        
+        # Sort options alphabetically (optional)
+        dropdown_options.sort()
+        
+        return render_template('index.html', dropdown_options=dropdown_options)
+    
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
